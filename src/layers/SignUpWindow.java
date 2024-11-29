@@ -3,18 +3,26 @@ package layers;
 import helpers.Helper;
 import usermanagement.Customer;
 
+import java.util.List;
+
 public class SignUpWindow {
 
-    public Customer collectUserInformation(){
+    public void collectUserInformation(List<Customer> customers){
         System.out.println(" ".repeat(20) + "Sign Up");
         System.out.println("Please enter information about you to complete registration.");
         System.out.println("Option marked with * are required.");
         System.out.println("_ ".repeat(50));
 
         String firstName = getUserInfo("*First name: ");
+
         String lastName = getUserInfo("*Last name: ");
-        String email = checkEmail();
-        String password = checkPassword();
+
+        String email = checkEmail(customers);
+
+        String password = "";
+        while(password.isEmpty()){
+            password = checkPassword();
+        }
 
         System.out.print("Gender: ");
         String gender = Helper.scanner.nextLine();
@@ -23,11 +31,13 @@ public class SignUpWindow {
         System.out.print("Address: ");
         String address = Helper.scanner.nextLine();
 
-        System.out.print("Please confirm your registration with 'yes', any other option will result to cancel your registration.");
+        System.out.println("Please confirm your registration with 'yes', any other option will result in cancellation of your registration.");
         String input = Helper.scanner.nextLine();
-        if(input.equals("yes")) return new Customer(firstName, lastName, email, password, gender, phoneNumber, address);
+        if(input.equals("yes")) {
+            Customer customer = new Customer(firstName, lastName, email, password, gender, phoneNumber, address);
+            customers.add(customer);
+        }
 
-        return null;
     }
 
     private String getUserInfo(String text){
@@ -39,22 +49,37 @@ public class SignUpWindow {
         return input;
     }
 
-    private String checkEmail(){
+
+    // check if email is valid and also if email is not already used by another user
+    private String checkEmail(List<Customer> customers){
         String input = "";
         while (input.isBlank() || !input.contains("@")){
             System.out.print("*Email:");
             input = Helper.scanner.nextLine();
+            for(Customer customer : customers){
+                if(customer.getEmail().equals(input)){
+                    System.out.println("Email is already used by another customer. Please enter different email address.");
+                    input = "";
+                    break;
+                }
+            }
         }
         return input;
     }
 
     private String checkPassword(){
-        String input = "";
-        while (input.isBlank()) {
+        String password = "";
+        while (password.isBlank()) {
             System.out.print("*Password: ");
-            input = Helper.scanner.nextLine();
+            password = Helper.scanner.nextLine();
         }
-        return input;
+
+        System.out.print("*Confirm password: ");
+        String confirmPassword = Helper.scanner.nextLine();
+
+        if(!password.equals(confirmPassword)) return "";
+
+        return password;
     }
 
 }
