@@ -1,17 +1,24 @@
 package layers;
 
 import helpers.Helper;
+import usermanagement.Customer;
+import usermanagement.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainMenuWindow {
 
-    //private static MainMenuWindow window = null;
+
     private SignUpWindow signUpWindow;
+    private LogInWindow logInWindow;
+
+
+    private List<Customer> customers = new ArrayList<>();
+    private User currentUser;
 
     private boolean isAppEnd = false;
 
-    private void initializeApp(){
-        signUpWindow = new SignUpWindow();
-    }
 
     public void startApp(){
         initializeApp();
@@ -29,17 +36,34 @@ public class MainMenuWindow {
         }while(!isAppEnd);
     }
 
+    private void initializeApp(){
+        customers = createCustomers();
+
+        signUpWindow = new SignUpWindow();
+        logInWindow = new LogInWindow();
+    }
+
+    private List<Customer> createCustomers(){
+        List<Customer> artificialCustomers = new ArrayList<>();
+        artificialCustomers.add(new Customer("Jake", "Noah", "jake.noah@gmail.com", "123", "", "", ""));
+        artificialCustomers.add(new Customer("Mike", "Hos", "mike.Hos@gmail.com", "123", "", "", ""));
+        artificialCustomers.add(new Customer("Peter", "Bolt", "peter.bolt@gmail.com", "123", "", "", ""));
+
+        return artificialCustomers;
+    }
+
     private boolean processUserInput(){
         String input = Helper.scanner.nextLine();
         switch (input.charAt(0)){
             case '1' :
-                System.out.println("");
+                Customer customer = logInWindow.logInUser(customers);
+                if(customer != null) currentUser = customer;
                 break;
             case '2':
-                signUpWindow.collectUserInformation();
+                signUpWindow.collectUserInformation(customers);
                 break;
             case '3':
-                System.out.println("Good Day");
+                System.out.println("Good by!");
                 return true;
             default:
                 break;
@@ -57,7 +81,10 @@ public class MainMenuWindow {
                 "                                                       \n" +
                 "                                                       ");
 
-        System.out.println("to our library.");
+        if(currentUser != null){
+            System.out.println("I hope you have a great day " + currentUser.getFirstName() + " " + currentUser.getLastName());
+            System.out.println();
+        }
 
     }
 

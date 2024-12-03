@@ -10,7 +10,7 @@ public class LogInWindow {
 
 
     public Customer logInUser(List<Customer> customers){
-        
+
         Customer customer = null;
 
         System.out.print("Enter your email: ");

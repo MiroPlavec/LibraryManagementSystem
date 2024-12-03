@@ -37,7 +37,6 @@ public class SignUpWindow {
             Customer customer = new Customer(firstName, lastName, email, password, gender, phoneNumber, address);
             customers.add(customer);
         }
-
     }
 
     private String getUserInfo(String text){
